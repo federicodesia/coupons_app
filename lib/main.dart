@@ -118,6 +118,56 @@ class HomePageState extends State<HomePage> {
               Container()
             ],
           ),
+          bottomNavigationBar: Stack(
+            alignment: Alignment.bottomCenter,
+            children: [
+              // Bottom Navigation Bar
+              SizedBox(
+                height: cBottomNavigationBarOptionSize,
+                child: Stack(
+                  children: [
+                    CustomPaint(
+                      size: Size(MediaQuery.of(context).size.width, cBottomNavigationBarOptionSize),
+                      painter: BottomNavigationBarPainter(cBottomNavigationBarCurve),
+                    ),
+
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        BottomNavigationBarButton(
+                          icon: Icons.question_answer_rounded,
+                          text: "Send Money"
+                        ),
+                        SizedBox(width: cBottomNavigationBarOptionSize,),
+                        BottomNavigationBarButton(
+                          icon: Icons.layers_rounded,
+                          text: "Services"
+                        )
+                      ],
+                    )
+                  ],
+                ),
+              ),
+
+              // Floating Action Button
+              Padding(
+                padding: EdgeInsets.only(bottom: cFloatingActionButtonHeight - cBottomNavigationBarOptionSize),
+                child: SizedBox(
+                  height: cBottomNavigationBarOptionSize,
+                  width: cBottomNavigationBarOptionSize,
+                  child: FittedBox(
+                    child: FloatingActionButton(
+                      onPressed: () {},
+                      elevation: 1,
+                      highlightElevation: 8,
+                      backgroundColor: Color(0xFF77C8F7),
+                      child: Icon(Icons.crop_free_rounded),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          )
         ),
       ),
     );
@@ -138,5 +188,69 @@ class AppBarIconButton extends StatelessWidget{
       ),
       onPressed: onPressed,
     );
+  }
+}
+
+class  BottomNavigationBarButton extends StatelessWidget{
+  final IconData icon;
+  final String text;
+  BottomNavigationBarButton({required this.icon, required this.text});
+
+  Widget build(BuildContext context){
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(
+          icon,
+          color: cBottomNavigationBarOptionColor,
+          size: 32.0,
+        ),
+
+        Text(
+          text,
+          style: cTextStyle.copyWith(
+            color: cBottomNavigationBarOptionColor,
+            fontWeight: FontWeight.w600,
+            height: 1.2,
+          ),
+        )
+      ],
+    );
+  }
+}
+
+class BottomNavigationBarPainter extends CustomPainter{
+  final double bottom;
+  BottomNavigationBarPainter(this.bottom);
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    Paint paint = Paint()..color = Colors.white..style = PaintingStyle.fill;
+    Path path = Path();
+    
+    double space = 48.0;
+    double line = space * 2 + 8.0;
+
+    path.lineTo(size.width / 2 - line, 0);
+    path.cubicTo(size.width / 2 - space, 0,
+                 size.width / 2 - space, bottom,
+                 size.width / 2, 24);
+
+    path.cubicTo(size.width / 2 + space, bottom,
+                 size.width / 2 + space, 0,
+                 size.width / 2 + line, 0);
+    path.lineTo(size.width, 0);
+    
+    path.lineTo(size.width, size.height);
+    path.lineTo(0, size.height);
+    path.lineTo(0, 0);
+    path.close();
+
+    canvas.drawPath(path, paint);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) {
+    return false;
   }
 }
