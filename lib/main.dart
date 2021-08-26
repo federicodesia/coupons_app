@@ -1,4 +1,5 @@
 import 'package:coupons_app/constants.dart';
+import 'package:coupons_app/tabs/coupons_tab/coupons_tab.dart';
 import 'package:flutter/material.dart';
 
 void main() => runApp(MyApp());
@@ -115,7 +116,7 @@ class HomePageState extends State<HomePage> {
               Container(),
 
               // Coupons Tab
-              Container()
+              CouponsTab()
             ],
           ),
           bottomNavigationBar: Stack(

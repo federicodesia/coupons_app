@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+const double cPadding = 16.0;
+
 // Bottom Navigation Bar
 double cBottomNavigationBarCurve = 24.0;
 double cBottomNavigationBarOptionSize = 78.0;
@@ -11,6 +13,7 @@ double cFloatingActionButtonHeight = (cBottomNavigationBarOptionSize - (cBottomN
 Color cTextColor = Color(0xFF303030);
 Color cLightColor = cTextColor.withOpacity(0.48);
 
+// Text
 TextStyle cTabTextStyle = TextStyle(
   fontSize: 18.0,
   fontFamily: "Poppins",
@@ -23,3 +26,13 @@ TextStyle cTextStyle = TextStyle(
   color: cLightColor,
   fontWeight: FontWeight.w400
 );
+
+TextStyle cHeaderTextStyle = TextStyle(
+  fontSize: 18.0,
+  fontFamily: "Poppins",
+  color: cTextColor,
+  fontWeight: FontWeight.w400
+);
+
+// Cards
+BorderRadius cCardBorderRadius = BorderRadius.circular(18.0);
