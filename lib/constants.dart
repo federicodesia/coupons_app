@@ -36,3 +36,5 @@ TextStyle cHeaderTextStyle = TextStyle(
 
 // Cards
 BorderRadius cCardBorderRadius = BorderRadius.circular(18.0);
+Color cDarkCardTextColor = Colors.white;
+Color cLightCardTextColor = Color(0xFF30286A);

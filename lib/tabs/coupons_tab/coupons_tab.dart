@@ -1,8 +1,11 @@
-import 'dart:ui';
+import 'package:coupons_app/models/coupon.dart';
+import 'package:flutter/material.dart';
 import 'package:coupons_app/constants.dart';
 import 'package:coupons_app/models/discover.dart';
-import 'package:flutter/material.dart';
-import 'dart:math' as math;
+
+import 'components/coupon_card.dart';
+import 'components/discover_card.dart';
+import 'components/sliver_persistent_header.dart';
 
 class CouponsTab extends StatefulWidget{
 
@@ -13,14 +16,28 @@ class CouponsTab extends StatefulWidget{
 class _CouponsTabState extends State<CouponsTab>{
 
   ScrollController scrollController = new ScrollController();
+  double scrollOffset = 0.0;
+  double discoverOpacity = 1.0;
+
+  void _scrollListener(){
+    setState((){
+      scrollOffset = scrollController.offset;
+
+      // Lineal funtion: y = (x - 216) / -58
+      // Points: (158, 1) (216, 0)
+      discoverOpacity = ((scrollController.offset - 216) / -58).clamp(0.0, 1.0);
+    });
+  }
 
   @override
   void initState() {
+    scrollController.addListener(_scrollListener);
     super.initState();
   }
 
   @override
   void dispose() {
+    scrollController.removeListener(_scrollListener);
     super.dispose();
   }
 
@@ -30,6 +47,7 @@ class _CouponsTabState extends State<CouponsTab>{
       controller: scrollController,
       physics: BouncingScrollPhysics(),
       slivers: [
+        // Discover
         SliverToBoxAdapter(
           child: Column(
             children: [
@@ -57,136 +75,82 @@ class _CouponsTabState extends State<CouponsTab>{
                 ),
               ),
 
-              Padding(
-                padding: const EdgeInsets.only(bottom: cPadding),
-                child: SizedBox(
-                  height: 164.0,
-                  child: ListView.separated(
-                    physics: BouncingScrollPhysics(),
-                    padding: EdgeInsets.symmetric(horizontal: cPadding),
-                    scrollDirection: Axis.horizontal,
-                    itemCount: discoverList.length,
-                    separatorBuilder: (BuildContext context, int index){
-                      return SizedBox(width: 12.0,);
-                    },
-                    itemBuilder: (BuildContext context, int index){
-                      return SizedBox(
-                        width: 148.0,
-                        child: DiscoverCard(discoverList[index])
-                      );
-                    },
+              Opacity(
+                opacity: discoverOpacity,
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: cPadding),
+                  child: SizedBox(
+                    height: 164.0,
+                    child: ListView.separated(
+                      physics: BouncingScrollPhysics(),
+                      padding: EdgeInsets.symmetric(horizontal: cPadding),
+                      scrollDirection: Axis.horizontal,
+                      itemCount: discoverList.length,
+                      separatorBuilder: (BuildContext context, int index){
+                        return SizedBox(width: 12.0,);
+                      },
+                      itemBuilder: (BuildContext context, int index){
+                        return SizedBox(
+                          width: 148.0,
+                          child: DiscoverCard(discoverList[index])
+                        );
+                      },
+                    ),
                   ),
                 ),
               ),
             ],
           ),
         ),
-      ],
-    );
-  }
-}
 
-class DiscoverCard extends StatelessWidget{
-  final Discover discover;
-  DiscoverCard(this.discover);
+        // My Coupons
+        SliverPersistentHeader(
+          pinned: true,
+          delegate: HeaderDelegate("My Coupons"),
+        ),
 
-  Widget build(BuildContext context){
-    return Card(
-      margin: EdgeInsets.zero,
-      color: discover.backgroundColor,
-      shape: RoundedRectangleBorder(
-        borderRadius: cCardBorderRadius
-      ),
-      child: Stack(
-        children: [
-          DiscoverCardShadow(
-            xTranslate: 0,
-            yTranslate: -86,
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                Colors.white.withOpacity(0.08),
-                Colors.white.withOpacity(0.04)
-              ]
-            )
-          ),
-          DiscoverCardShadow(
-            xTranslate: 48,
-            yTranslate: 48,
-            gradient: LinearGradient(
-              begin: Alignment.centerLeft,
-              end: Alignment.centerRight,
-              colors: [
-                Colors.white.withOpacity(0.08),
-                Colors.white.withOpacity(0.02)
-              ]
-            )
-          ),
+        SliverPadding(
+          padding: EdgeInsets.all(cPadding).add(EdgeInsets.only(bottom: cPadding + cFloatingActionButtonHeight)),
+          sliver: SliverList(
+            delegate: SliverChildBuilderDelegate(
+              (BuildContext buildContext, int index){
+                
+                final itemHeight = 136.0;
+                final heightFactor = 0.8;
 
-          Padding(
-            padding: const EdgeInsets.all(12.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  discover.title,
-                  style: cTextStyle.copyWith(
-                    fontSize: 16.0,
-                    height: 1.3,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.white
+                final itemPositionOffset = index  * itemHeight * heightFactor;
+                final difference = (scrollOffset - 240) - itemPositionOffset;
+                final percent = 1.0 - (difference / (itemHeight * heightFactor));
+
+                final result = percent.clamp(0.0, 1.0);
+
+                return Align(
+                  heightFactor: heightFactor,
+                  child: SizedBox(
+                    height: itemHeight,
+                    child: Transform.scale(
+                      scale: result,
+                      alignment: Alignment(0.0, 0.56),
+                      child: Opacity(
+                        opacity: result,
+                        child: CouponCard(
+                          coupon: couponsList[index],
+                          context: buildContext,
+                          index: index,
+                          onTap: () {
+                            print("Pressed card " + index.toString());
+                          }
+                        ),
+                      ),
+                    ),
                   ),
-                ),
-                SizedBox(height: 4.0,),
-
-                Text(
-                  discover.couponsCount.toString() + " coupons",
-                  style: cTextStyle.copyWith(
-                    color: Colors.white.withOpacity(0.9)
-                  ),
-                ),
-                Spacer(),
-
-                Align(
-                  alignment: Alignment.bottomRight,
-                  child: Icon(
-                    discover.icon,
-                    size: 32.0,
-                    color: Colors.white.withOpacity(0.4),
-                  ),
-                )
-              ],
-            ),
-          )
-        ],
-      ),
-    );
-  }
-}
-
-class DiscoverCardShadow extends StatelessWidget{
-  final double xTranslate;
-  final double yTranslate;
-  final Gradient gradient;
-  DiscoverCardShadow({required this.xTranslate, required this.yTranslate, required this.gradient});
-
-  Widget build(BuildContext context){
-    return Center(
-      child: Transform.translate(
-        offset: Offset(xTranslate, yTranslate),
-        child: Transform.rotate(
-          angle: math.pi / 4,
-          child: Container(
-            width: 116,
-            height: 116,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(16.0),
-              gradient: gradient
+                );
+              },
+              childCount: couponsList.length
             )
           ),
         ),
-      ),
+      ],
     );
   }
 }
