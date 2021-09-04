@@ -38,3 +38,7 @@ TextStyle cHeaderTextStyle = TextStyle(
 BorderRadius cCardBorderRadius = BorderRadius.circular(18.0);
 Color cDarkCardTextColor = Colors.white;
 Color cLightCardTextColor = Color(0xFF30286A);
+
+// Coupons
+const double cCouponPadding = 24.0;
+const double cCouponTopSizeFactor = 0.48;

@@ -1,8 +1,8 @@
 import 'package:coupons_app/models/coupon.dart';
+import 'package:coupons_app/tabs/expanded_coupons/expanded_coupons.dart';
 import 'package:flutter/material.dart';
 import 'package:coupons_app/constants.dart';
 import 'package:coupons_app/models/discover.dart';
-
 import 'components/coupon_card.dart';
 import 'components/discover_card.dart';
 import 'components/sliver_persistent_header.dart';
@@ -138,7 +138,15 @@ class _CouponsTabState extends State<CouponsTab>{
                           context: buildContext,
                           index: index,
                           onTap: () {
-                            print("Pressed card " + index.toString());
+                            Navigator.of(context).push(
+                              PageRouteBuilder(
+                                pageBuilder: (context, animation, secondaryAnimation){
+                                  return ExpandedCoupons(index, context, animation);
+                                },
+                                transitionDuration: Duration(milliseconds: 800),
+                                reverseTransitionDuration: Duration(milliseconds: 800)
+                              )
+                            );
                           }
                         ),
                       ),
@@ -146,7 +154,7 @@ class _CouponsTabState extends State<CouponsTab>{
                   ),
                 );
               },
-              childCount: couponsList.length
+              childCount: couponsList.length,
             )
           ),
         ),
