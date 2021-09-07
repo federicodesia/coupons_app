@@ -1,16 +1,17 @@
-# coupons_app
+# Coupons App
 
-A new Flutter project.
+This is my first UI development challenge with animations and transitions in Flutter.
+<br>Built with AnimatedBuilder, ScrollView, PageView, Transform, Hero and Slivers.
 
-## Getting Started
+<br>
+<img width="320px" alt="Preview image" src="https://raw.githubusercontent.com/federicodesia/coupons_app/master/preview.gif"/>
 
-This project is a starting point for a Flutter application.
+<br><br>
 
-A few resources to get you started if this is your first Flutter project:
+## 🙇 Credits
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+<br>The [MVPs & Prototypes](https://dribbble.com/shots/14857079-MVPs-Prototypes) design was made by [PLATFORM](https://dribbble.com/plat4m) in Dribbble.
+<br>I tried to replicate it as best as possible to learn about animations.
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Thanks to [Danny Lau](https://github.com/kkdlau) for creating the [circular_border_hero](https://github.com/kkdlau/circular_border_hero) package.
+<br>I did a temporary deployment basically migrated to null safety.
